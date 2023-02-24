@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+nav {
+  -webkit-app-region: drag;
+}
+    </style>
+    <script defer src="https://unpkg.com/alpinejs"></script>
+    <script>
+      const PleaseImplementLoginApp = () => ({
+        username: "",
+        password: "",
+        error: "",
+        showCodeEditor: false,
+        onSubmit() {
+          if (this.showCodeEditor) {
+            eval(editor.getValue());
+            if (login(this.username, this.password)) {
+              this.error = '';
+              window.location.href = './success.html';
+            } else {
+              this.error = "Failed to authenticate";
+            }
+          }
+          else {
+            window.alert("Due to budget cuts, we were unable to implement the login app. Please implement it for us to continue.");
+            this.showCodeEditor = true;
+          }
+        },
+      })
+    </script>
+<script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+<script>
+  require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
+  window.MonacoEnvironment = {
+    getWorkerUrl: function(workerId, label) {
+      return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+        self.MonacoEnvironment = {
+          baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+        };
+        importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
+      )}`;
+    }
+  };
+
+  let editor = null;
+  require(["vs/editor/editor.main"], function () {
+    editor = monaco.editor.create(document.querySelector('#code'), {
+      value: `function login(username, password) {
+  alert("Due to budget cuts, we were unable to implement the login app. Please implement it for us to continue.");
+
+  // User did not login.
+  return false;
+}`,
+      language: 'javascript',
+      theme: 'vs-dark',
+      wordWrap: 'on',
+    });
+  });
+
+</script>
+  </head>
+  <body style="bg-transparent">
+    <nav class="fixed top-0 left-0 h-8 bg-black w-full flex items-center justify-center">
+      <input type="search" class="bg-neutral-900 border border-gray-800 text-white w-72 my-2 rounded-md px-1 text-sm" placeholder="Search" />
+    </nav>
+    <main class="container mx-auto max-w-[32rem]">
+      <h1 class="text-4xl text-center mt-16">Log in<h1>
+          <form class="flex flex-col items-center" x-data="PleaseImplementLoginApp()" @submit.prevent="onSubmit()">
+            <div class="w-full" :class="showCodeEditor ? '' : 'opacity-0 select-none'">
+              <div id="code" class="h-64 w-full w-32"></div>
+            </div>
+            <input x-model="username" type="text" class="p-2 bg-neutral-100 border border-gray-200 text-black w-full my-2 rounded-md px-1 text-sm" placeholder="Username" />
+            <input x-model="password" type="password" class="p-2 bg-neutral-100 border border-gray-200 text-black w-full my-2 rounded-md px-1 text-sm" placeholder="Password" />
+            <template x-if="error">
+              <div class="text-red-500 text-sm" x-text="error"></div>
+            </template>
+            <button type="submit" class="p-2 bg-blue-500 hover:bg-blue-600 text-white w-full my-2 rounded-md px-1 text-sm">Log in</button>
+          </form>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+nav {
+  -webkit-app-region: drag;
+}
+    </style>
+    <script defer src="https://unpkg.com/alpinejs"></script>
+    <script>
+      const PleaseImplementLoginApp = () => ({
+        username: "",
+        password: "",
+        error: "",
+        showCodeEditor: false,
+        onSubmit() {
+          if (this.showCodeEditor) {
+            eval(editor.getValue());
+            if (login(this.username, this.password)) {
+              this.error = '';
+              window.location.href = './success.html';
+            } else {
+              this.error = "Failed to authenticate";
+            }
+          }
+          else {
+            window.alert("Due to budget cuts, we were unable to implement the login app. Please implement it for us.");
+            this.showCodeEditor = true;
+          }
+        },
+      })
+    </script>
+<script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+<script>
+  require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
+  window.MonacoEnvironment = {
+    getWorkerUrl: function(workerId, label) {
+      return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+        self.MonacoEnvironment = {
+          baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+        };
+        importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
+      )}`;
+    }
+  };
+
+  let editor = null;
+  require(["vs/editor/editor.main"], function () {
+    editor = monaco.editor.create(document.querySelector('#code'), {
+      value: `function login(username, password) {
+  alert("Due to budget cuts, we were unable to implement the login app. Please implement it for us.");
+  // User did not login.
+  return false;
+}`,
+      language: 'javascript',
+      theme: 'vs-dark',
+    });
+  });
+
+</script>
+  </head>
+  <body style="bg-transparent">
+    <nav class="fixed top-0 left-0 h-8 bg-black w-full flex items-center justify-center">
+      <input type="search" class="bg-neutral-900 border border-gray-800 text-white w-72 my-2 rounded-md px-1 text-sm" placeholder="Search" />
+    </nav>
+    <main class="container mx-auto max-w-[32rem] py-12 flex flex-col space-y-4 min-h-screen">
+			<h1 class="text-4xl font-semibold text-center">Welcome to the newest cutting edge software (WIP)!</h1>
+      <div class="flex-1 flex items-center justify-center">
+        <img src="https://media.tenor.com/mOUXmz69Z1IAAAAM/neon-cat-cute.gif" class="aspect-square w-full" />
+      </div>
+      <a href="./index.html" class="w-full p-2 text-center bg-blue-500 hover:bg-blue-600 w-full text-white rounded-md block">Log out</a>
+    </main>
+  </body>
+</html>
